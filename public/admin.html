@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin | Leads</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root{--bg:#f5f2ec;--card:#ffffff;--text:#171717;--muted:#6d675f;--line:#e5ddd3;--accent:#b22222;--dark:#161616}
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    a{text-decoration:none;color:inherit}.top{padding:1rem 1.25rem;background:var(--dark);color:#fff;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+    .actions{display:flex;gap:.75rem;flex-wrap:wrap}.btn{padding:.75rem 1rem;border-radius:12px;border:none;background:var(--accent);color:#fff;font-weight:700;cursor:pointer}.btn.alt{background:#fff;color:var(--dark)}
+    .wrap{max-width:1320px;margin:0 auto;padding:1.25rem}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:1rem;box-shadow:0 10px 30px rgba(0,0,0,.04)}
+    .num{font-size:2rem;font-weight:800}.lbl{font-size:.85rem;color:var(--muted)}
+    .charts{display:grid;grid-template-columns:1.2fr .8fr;gap:1rem;margin:1rem 0}.filters{display:flex;gap:.75rem;flex-wrap:wrap;margin:1rem 0}.filters input,.filters select{padding:.8rem 1rem;border:1px solid var(--line);border-radius:12px;background:#fff}
+    table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}.table-wrap{overflow:auto}.leads th,.leads td{padding:.85rem 1rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.leads th{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:#f8f5f1}
+    .badge{display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.74rem;font-weight:700}.novo{background:#e9f8e4;color:#225d1c}.contactado{background:#fff3cd;color:#795b00}.agendado{background:#dff4ff;color:#0c5460}.concluido{background:#d1e7dd;color:#0f5132}.cancelado{background:#f8d7da;color:#842029}
+    .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:1rem}.modal-bg.open{display:flex}.modal{max-width:720px;width:100%;background:#fff;border-radius:18px;padding:1.25rem;max-height:90vh;overflow:auto}.row{display:grid;grid-template-columns:150px 1fr;gap:.75rem;padding:.45rem 0;border-bottom:1px solid var(--line)}
+    .photos{display:flex;flex-wrap:wrap;gap:.5rem}.photos img{width:88px;height:88px;object-fit:cover;border-radius:10px;border:1px solid var(--line);cursor:pointer}
+    @media(max-width:960px){.grid,.charts{grid-template-columns:1fr 1fr}} @media(max-width:700px){.grid,.charts{grid-template-columns:1fr}.row{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div><strong>Painel Admin</strong><div style="font-size:.85rem;opacity:.7">Leads, gráficos e exportação</div></div>
+    <div class="actions"><a class="btn alt" href="/">Ver site</a><a class="btn" href="/admin/configurador">Pedidos do configurador (CAD, DXF, PDF)</a><a class="btn" href="/api/leads/export">Exportar CSV</a></div>
+  </div>
+  <div class="wrap">
+    <div class="grid">
+      <div class="card"><div class="num" id="sTotal">0</div><div class="lbl">Total de leads</div></div>
+      <div class="card"><div class="num" id="sNovo">0</div><div class="lbl">Novos</div></div>
+      <div class="card"><div class="num" id="sSemana">0</div><div class="lbl">Últimos 7 dias</div></div>
+      <div class="card"><div class="num" id="sFotos">0</div><div class="lbl">Com fotos</div></div>
+    </div>
+    <div class="charts">
+      <div class="card"><canvas id="servicesChart"></canvas></div>
+      <div class="card"><canvas id="statusChart"></canvas></div>
+    </div>
+    <div class="filters">
+      <input id="q" placeholder="Pesquisar por nome, telefone, email ou morada" />
+      <select id="fEstado"><option value="todos">Todos os estados</option><option value="novo">Novo</option><option value="contactado">Contactado</option><option value="agendado">Agendado</option><option value="concluido">Concluído</option><option value="cancelado">Cancelado</option></select>
+    </div>
+    <div class="table-wrap">
+      <table class="leads"><thead><tr><th>Data</th><th>Nome</th><th>Telefone</th><th>Serviço</th><th>Estado</th><th></th></tr></thead><tbody id="tbody"></tbody></table>
+    </div>
+  </div>
+  <div class="modal-bg" id="modalBg"><div class="modal"><h3 id="mTitle">Lead</h3><div id="mBody"></div><div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem"><select id="mEstado"><option value="novo">Novo</option><option value="contactado">Contactado</option><option value="agendado">Agendado</option><option value="concluido">Concluído</option><option value="cancelado">Cancelado</option></select><button class="btn" id="saveBtn">Guardar</button><button class="btn alt" onclick="closeModal()">Fechar</button></div></div></div>
+<script>
+let leads=[]; let filtered=[]; let current=null; let servicesChart,statusChart;
+async function load(){ const res=await fetch('/api/leads'); const data=await res.json(); leads=data.leads||[]; render(); }
+function render(){
+  const q=document.getElementById('q').value.toLowerCase(); const estado=document.getElementById('fEstado').value;
+  filtered=leads.filter(l => (estado==='todos'||l.estado===estado) && [l.nome,l.telefone,l.email,l.morada,l.servico,l.tipo].join(' ').toLowerCase().includes(q));
+  document.getElementById('sTotal').textContent=leads.length;
+  document.getElementById('sNovo').textContent=leads.filter(l=>l.estado==='novo').length;
+  document.getElementById('sSemana').textContent=leads.filter(l=>Date.now()-new Date(l.criadoEm).getTime()<7*24*60*60*1000).length;
+  document.getElementById('sFotos').textContent=leads.filter(l=>(l.fotos||[]).length).length;
+  const tbody=document.getElementById('tbody');
+  tbody.innerHTML=filtered.length?filtered.map(l=>`<tr><td>${fmt(l.criadoEm)}</td><td><strong>${esc(l.nome)}</strong><div style="color:#6d675f;font-size:.85rem">${esc(l.morada||'')}</div></td><td><a href="tel:${esc(l.telefone)}">${esc(l.telefone)}</a></td><td>${esc(l.servico||'—')}</td><td><span class="badge ${l.estado}">${cap(l.estado)}</span></td><td><button class="btn" style="padding:.55rem .8rem" onclick="openModal('${l.id}')">Ver</button>${l.origem==='configurador'?` <a class="btn alt" style="padding:.55rem .8rem" href="/admin/configurador#${esc(l.id)}">CAD / ficheiros</a>`:''}</td></tr>`).join(''):`<tr><td colspan="6" style="padding:2rem;text-align:center;color:#6d675f">Sem leads.</td></tr>`;
+  drawCharts();
+}
+function drawCharts(){
+  const services={}; const status={};
+  leads.forEach(l=>{services[l.servico||'outro']=(services[l.servico||'outro']||0)+1; status[l.estado||'novo']=(status[l.estado||'novo']||0)+1;});
+  servicesChart?.destroy(); statusChart?.destroy();
+  servicesChart=new Chart(document.getElementById('servicesChart'),{type:'bar',data:{labels:Object.keys(services),datasets:[{label:'Leads por serviço',data:Object.values(services)}]},options:{plugins:{legend:{display:false}},responsive:true}});
+  statusChart=new Chart(document.getElementById('statusChart'),{type:'doughnut',data:{labels:Object.keys(status),datasets:[{data:Object.values(status)}]},options:{responsive:true}});
+}
+function openModal(id){ current=leads.find(l=>l.id===id); if(!current) return; document.getElementById('mTitle').textContent=current.nome; document.getElementById('mEstado').value=current.estado; const rows=[['ID',current.id],['Data',fmt(current.criadoEm)],['Telefone',`<a href="tel:${current.telefone}">${esc(current.telefone)}</a>`],['Email',esc(current.email||'—')],['Morada',esc(current.morada||'—')],['Serviço',esc(current.servico||'—')],['Tipo',esc(current.tipo||'—')],['Descrição',esc(current.descricao||'—')],['Medidas',current.largura&&current.altura?`${esc(current.largura)} × ${esc(current.altura)} cm`:'—'],['Urgência',esc(current.urgencia||'—')],['Horário',esc(current.preferencia_horario||'—')],['Observações',esc(current.observacoes||'—')]]; let html=rows.map(([a,b])=>`<div class="row"><strong>${a}</strong><div>${b}</div></div>`).join(''); if((current.fotos||[]).length){ html += `<div class="row"><strong>Fotos</strong><div class="photos">${current.fotos.map(f=>`<img src="/uploads/${f}" onclick="window.open(this.src,'_blank')">`).join('')}</div></div>`; } document.getElementById('mBody').innerHTML=html; document.getElementById('modalBg').classList.add('open'); }
+function closeModal(){ document.getElementById('modalBg').classList.remove('open'); current=null; }
+document.getElementById('saveBtn').addEventListener('click', async()=>{ if(!current) return; const estado=document.getElementById('mEstado').value; const res=await fetch(`/api/leads/${current.id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({estado})}); const data=await res.json(); if(data.ok){ const idx=leads.findIndex(l=>l.id===current.id); leads[idx]=data.lead; closeModal(); render(); } });
+document.getElementById('q').addEventListener('input', render); document.getElementById('fEstado').addEventListener('change', render); document.getElementById('modalBg').addEventListener('click',e=>{ if(e.target===e.currentTarget) closeModal();});
+function fmt(v){ return new Date(v).toLocaleString('pt-PT'); } function cap(v){return v? v[0].toUpperCase()+v.slice(1):'—'} function esc(v=''){return String(v).replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+load(); setInterval(load,30000);
+</script>
+</body></html>

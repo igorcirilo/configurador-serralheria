@@ -1,0 +1,15 @@
+node_modules
+.env*
+.claude
+.tmp-tests
+backup
+docs
+output
+tmp
+tmp-*
+uploads
+leads*.json
+importar.js
+iniciar.ps1
+src
+.vercel

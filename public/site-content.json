@@ -1,0 +1,161 @@
+{
+  "source": "https://ideiascomuns.pt/",
+  "company": {
+    "name": "Ideias Comuns lda",
+    "tagline": "Caixilharia e Vidro",
+    "description": "Especializados no fabrico e montagem de caixilharias e vidros, criamos soluções para a sua obra.",
+    "about": "É uma serralharia e vidraria que desde 2008 se capacitou de conhecimento, equipamento e recursos técnicos que conferem capacidades avançadas de execução de trabalhos em Alumínio PVC e Vidro.",
+    "logo": "",
+    "phones": [
+      "220 164 062",
+      "926 400 078"
+    ],
+    "email": "ideiascomuns@gmail.com",
+    "address": "Travessa monte de S. Gens, 113, Custóias - Matosinhos"
+  },
+  "hero": {
+    "badge": "✦ Especialistas em Caixilharia e Vidro",
+    "title": "Soluções em vidro e alumínio para a sua obra",
+    "subtitle": "Montagem, manutenção e desenvolvimento de projetos com foco em execução técnica e acabamento.",
+    "stats": [
+      {
+        "value": "Desde 2008",
+        "label": "Experiência no setor"
+      },
+      {
+        "value": "5 áreas",
+        "label": "Serviços principais"
+      },
+      {
+        "value": "2 contactos",
+        "label": "Atendimento direto"
+      }
+    ]
+  },
+  "services": [
+    {
+      "key": "aluminio",
+      "label": "Alumínio",
+      "description": "Soluções em alumínio para diferentes tipos de obra.",
+      "items": [
+        "Portas",
+        "Janelas",
+        "Estruturas compostas",
+        "Fachadas",
+        "Portões"
+      ],
+      "image": "",
+      "icon": "🏗️"
+    },
+    {
+      "key": "vidros",
+      "label": "Vidros",
+      "description": "Fornecimento e montagem de várias soluções em vidro.",
+      "items": [
+        "Vidro monolítico e lacado",
+        "Vidro laminado",
+        "Vidro temperado",
+        "Vidro duplo",
+        "Espelhos"
+      ],
+      "image": "",
+      "icon": "🪟"
+    },
+    {
+      "key": "automatismos",
+      "label": "Automatismos",
+      "description": "Automatização para portas, portões e janelas.",
+      "items": [
+        "Portas automáticas",
+        "Portões seccionados",
+        "Automatismos para portões",
+        "Automatismos para janelas"
+      ],
+      "image": "",
+      "icon": "⚙️"
+    },
+    {
+      "key": "montagens_especializadas",
+      "label": "Montagens Especializadas",
+      "description": "Prestação de serviços de montagem com equipamentos adequados.",
+      "items": [
+        "Montagens especializadas",
+        "Apoio a montagens externas"
+      ],
+      "image": "",
+      "icon": "🚚"
+    },
+    {
+      "key": "manutencao_reparo",
+      "label": "Manutenção e Reparo",
+      "description": "Manutenção preventiva, curativa e reparação de caixilharias.",
+      "items": [
+        "Manutenção preventiva",
+        "Manutenção curativa",
+        "Reparação de caixilharias",
+        "Reparação de estruturas em alumínio"
+      ],
+      "image": "",
+      "icon": "🔧"
+    },
+    {
+      "key": "prescricao_desenvolvimento",
+      "label": "Prescrição e Desenvolvimento",
+      "description": "Apoio técnico para obras e desenvolvimento de projetos.",
+      "items": [
+        "Prescrição técnica de obras",
+        "Apoio no desenvolvimento de projetos",
+        "Acompanhamento na execução de obras"
+      ],
+      "image": "",
+      "icon": "📐"
+    }
+  ],
+  "brands": [
+    {
+      "name": "Cortizo",
+      "logo": ""
+    },
+    {
+      "name": "Guardian",
+      "logo": ""
+    },
+    {
+      "name": "Indalsu",
+      "logo": ""
+    },
+    {
+      "name": "Saint-Gobain",
+      "logo": ""
+    },
+    {
+      "name": "TAFE",
+      "logo": ""
+    },
+    {
+      "name": "Wurth",
+      "logo": ""
+    }
+  ],
+  "gallery": [],
+  "reviews": [
+    {
+      "author": "Cliente",
+      "location": "Matosinhos",
+      "rating": 5,
+      "text": "Empresa focada em soluções de caixilharia e vidro para obras residenciais e profissionais."
+    },
+    {
+      "author": "Cliente",
+      "location": "Porto",
+      "rating": 5,
+      "text": "Serviços de montagem, automatismos e manutenção num único parceiro."
+    },
+    {
+      "author": "Cliente",
+      "location": "Grande Porto",
+      "rating": 4,
+      "text": "Boa cobertura de serviços técnicos e acompanhamento de obra."
+    }
+  ]
+}

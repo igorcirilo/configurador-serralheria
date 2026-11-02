@@ -1,0 +1,14 @@
+export { renderJoinery } from './engine/renderWindow.js';
+export { renderCommercialJoinery } from './engine/renderCommercial.js';
+export { renderTechnicalJoinery } from './engine/renderTechnical.js';
+export { renderJoineryDxf, cadSceneToDxf } from './engine/renderDxf.js';
+export { calculateJoineryGeometry } from './engine/geometryModel.js';
+export { openingSegments } from './engine/symbolGeometry.js';
+export { buildCadScene, CAD_LAYERS, dimensionGeometry } from './engine/cadScene.js';
+export { buildJoinery3DScene } from './engine/scene3d.js';
+export { validateJoineryConfig } from './models/validation.js';
+export { composeJoinery } from './engine/compose.js';
+export { getRegistry } from './engine/registry.js';
+export { sampleConfigs } from './examples/sampleConfigs.js';
+export { resolveJoineryConfig, getDefaultTheme } from './models/schema.js';
+export { OPENING_SYSTEM_CATALOG, getOpeningSystem, listOpeningSystems } from './catalog/openingSystems.js';

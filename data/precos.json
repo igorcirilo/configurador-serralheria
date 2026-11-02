@@ -1,0 +1,9 @@
+{
+  "version": "v1",
+  "notes": "Tabela mantida apenas como apoio comercial nesta fase. O foco da V1 e o pacote tecnico simplificado para orcamento.",
+  "baseByCategory": {
+    "joinery": 1,
+    "decorative_glass": 1,
+    "related": 1
+  }
+}

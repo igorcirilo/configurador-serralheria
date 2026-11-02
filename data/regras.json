@@ -1,0 +1,63 @@
+{
+  "version": "v1",
+  "focus": "configurador_comercial_pacote_tecnico",
+  "rules": {
+    "productTypes": [
+      { "value": "window", "label": "Janela", "category": "joinery" },
+      { "value": "door", "label": "Porta", "category": "joinery" },
+      { "value": "glass", "label": "Vidro", "category": "decorative_glass" },
+      { "value": "mirror", "label": "Espelho", "category": "decorative_glass" },
+      { "value": "other", "label": "Outro relacionado", "category": "related" }
+    ],
+    "joineryOpeningTypes": [
+      { "value": "fixed", "label": "Fixo", "leaves": 0, "requiresHand": false, "requiresDirection": false, "requiresActiveLeaf": false },
+      { "value": "casement_1", "label": "Abrir 1 folha", "leaves": 1, "requiresHand": true, "requiresDirection": true, "requiresActiveLeaf": false },
+      { "value": "casement_2", "label": "Abrir 2 folhas", "leaves": 2, "requiresHand": false, "requiresDirection": true, "requiresActiveLeaf": false },
+      { "value": "sliding_2", "label": "Correr 2 folhas", "leaves": 2, "requiresHand": false, "requiresDirection": false, "requiresActiveLeaf": true },
+      { "value": "sliding_3", "label": "Correr 3 folhas", "leaves": 3, "requiresHand": false, "requiresDirection": false, "requiresActiveLeaf": true },
+      { "value": "tilt_turn", "label": "Oscilo-batente", "leaves": 1, "requiresHand": true, "requiresDirection": true, "requiresActiveLeaf": false },
+      { "value": "hopper", "label": "Basculante / Tombar", "leaves": 1, "requiresHand": false, "requiresDirection": true, "requiresActiveLeaf": false }
+    ],
+    "colors": [
+      { "value": "black", "label": "Preto", "hex": "#1f232b" },
+      { "value": "white", "label": "Branco", "hex": "#f3f0e8" },
+      { "value": "graphite", "label": "Cinza antracite", "hex": "#5a626f" },
+      { "value": "bronze", "label": "Bronze", "hex": "#8f6a49" },
+      { "value": "natural", "label": "Natural", "hex": "#c6ccd3" }
+    ],
+    "profileSystems": [
+      { "value": "cold", "label": "Série fria" },
+      { "value": "thermal", "label": "Rotura térmica" }
+    ],
+    "glassKinds": [
+      { "value": "clear", "label": "Vidro incolor" },
+      { "value": "tempered", "label": "Vidro temperado" },
+      { "value": "laminated", "label": "Vidro laminado" },
+      { "value": "double_glazed", "label": "Vidro duplo" },
+      { "value": "reflective", "label": "Vidro refletivo" }
+    ],
+    "finishes": [
+      { "value": "clear", "label": "Acabamento transparente" },
+      { "value": "frosted", "label": "Acabamento fosco" },
+      { "value": "smoked", "label": "Acabamento fumado" },
+      { "value": "bronze", "label": "Tom bronze" }
+    ],
+    "mirrorEdges": [
+      { "value": "polished", "label": "Borda polida" },
+      { "value": "beveled", "label": "Biselada" },
+      { "value": "raw", "label": "Corte reto" }
+    ],
+    "shapes": [
+      { "value": "rectangular", "label": "Retangular" },
+      { "value": "round", "label": "Redondo" },
+      { "value": "oval", "label": "Oval" },
+      { "value": "arched", "label": "Arco superior" }
+    ],
+    "hardware": [
+      { "value": "handle", "label": "Puxador standard" },
+      { "value": "lock", "label": "Fechadura" },
+      { "value": "hidden_hinges", "label": "Dobradiças ocultas" },
+      { "value": "soft_close", "label": "Fecho suave" }
+    ]
+  }
+}

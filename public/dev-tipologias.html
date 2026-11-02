@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Galeria de Tipologias</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/dev-tipologias.css">
+</head>
+<body>
+  <header class="lab-header">
+    <div>
+      <p class="eyebrow">Laboratório interno</p>
+      <h1>Galeria de tipologias</h1>
+      <p class="intro">Validação visual do mesmo modelo paramétrico nos modos comercial e técnico. Apenas os sistemas marcados como validados devem ser usados como referência aprovada.</p>
+    </div>
+    <a href="/configurador">Voltar ao configurador</a>
+  </header>
+
+  <main>
+    <section class="section-head">
+      <div><span>Entrega 01</span><h2>Fixo, batente e oscilobatente</h2></div>
+      <label>Vista de validação
+        <select id="viewSide"><option value="interior">Interior</option><option value="exterior">Exterior</option></select>
+      </label>
+    </section>
+    <div class="gallery" id="validatedGallery"></div>
+
+    <section class="delivery-section">
+      <div class="section-head"><div><span>Entrega 02</span><h2>Corrediças em validação</h2><p>Geometria funcional implementada; setas e calhas permanecem esquemáticas até validação por fabricante.</p></div></div>
+      <div class="gallery" id="slidingGallery"></div>
+    </section>
+
+    <section class="roadmap-section">
+      <div class="section-head"><div><span>Catálogo</span><h2>Estado dos restantes sistemas</h2></div></div>
+      <div class="roadmap" id="roadmap"></div>
+    </section>
+  </main>
+  <script type="module" src="/dev-tipologias.js"></script>
+</body>
+</html>

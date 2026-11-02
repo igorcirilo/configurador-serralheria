@@ -1,0 +1,19 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "",
+  "outputDirectory": "public",
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "{public,data}/**",
+      "maxDuration": 30
+    }
+  },
+  "redirects": [
+    { "source": "/", "destination": "/configurador", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/vendor/three/:path*", "destination": "https://cdn.jsdelivr.net/npm/three@0.181.0/:path*" },
+    { "source": "/(.*)", "destination": "/api" }
+  ]
+}

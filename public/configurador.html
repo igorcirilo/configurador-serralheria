@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador de Janelas e Portas</title>
+  <meta name="description" content="Simule a sua janela ou porta em poucos passos, veja como fica e peça um orçamento gratuito.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/configurador.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-inner">
+      <nav class="topbar">
+        <a class="brand" href="/">
+          <span class="brand-mark">IC</span>
+          <span class="brand-copy">
+            <strong>Ideias Comuns</strong>
+            <small>Simulador</small>
+          </span>
+        </a>
+        <div class="topbar-actions">
+          <a href="/">Voltar ao site</a>
+        </div>
+      </nav>
+
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Orçamento gratuito e sem compromisso</p>
+          <h1>Veja como fica a sua janela ou porta antes de pedir orçamento.</h1>
+          <p class="hero-text">Responda a algumas perguntas simples. Nós tratamos dos detalhes técnicos e enviamos-lhe uma proposta.</p>
+          <div class="hero-cta-row">
+            <a class="primary-link" href="#simulador">Começar</a>
+            <span class="hero-note">Demora cerca de 2 minutos</span>
+          </div>
+        </div>
+
+        <div class="hero-poster">
+          <div class="poster-card">
+            <span class="poster-kicker">1 · Escolha</span>
+            <strong>Janela ou porta</strong>
+            <p>E como quer que abra.</p>
+          </div>
+          <div class="poster-card">
+            <span class="poster-kicker">2 · Medidas e cor</span>
+            <strong>Vê o resultado na hora</strong>
+            <p>A imagem atualiza enquanto escolhe.</p>
+          </div>
+          <div class="poster-card accent">
+            <span class="poster-kicker">3 · Conforto</span>
+            <strong>Recomendamos o vidro</strong>
+            <p>Com base no que precisa: frio, calor, ruído ou privacidade.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="simulator-shell" id="simulador">
+    <section class="simulator-intro">
+      <p class="section-kicker">Simulador</p>
+      <h2>Vamos montar a sua janela.</h2>
+      <p>Se não souber alguma resposta, deixe a opção sugerida: confirmamos tudo consigo antes do orçamento final.</p>
+    </section>
+
+    <div class="simulator-layout">
+      <section class="controls-panel">
+        <div class="step-strip">
+          <div class="step-pill active">1. Produto</div>
+          <div class="step-pill">2. Medidas</div>
+          <div class="step-pill">3. Vidro</div>
+          <div class="step-pill">4. Contacto</div>
+        </div>
+
+        <form id="configurator-form" class="configurator-form">
+          <!-- Valores técnicos por omissão: o orçamentista confirma/ajusta no admin. -->
+          <input type="hidden" name="openingDirection" id="openingDirection" value="inside">
+          <input type="hidden" name="viewSide" id="viewSide" value="interior">
+          <input type="hidden" name="profileDepth" id="profileDepth" value="45">
+          <input type="hidden" name="dimensionMode" id="dimensionMode" value="full">
+
+          <section class="control-block">
+            <div class="block-head">
+              <p class="block-kicker">Passo 1</p>
+              <h3>O que procura?</h3>
+            </div>
+            <div class="choice-grid product-grid" id="productChoices"></div>
+            <select name="productType" id="productType" class="sr-only" tabindex="-1" aria-hidden="true"></select>
+          </section>
+
+          <section class="control-block maintenance-only">
+            <div class="block-head">
+              <p class="block-kicker">Passo 2</p>
+              <h3>O que se passa?</h3>
+            </div>
+            <fieldset class="need-group">
+              <legend>Onde é o problema?</legend>
+              <div class="choice-grid need-grid" id="repairItemChoices"></div>
+            </fieldset>
+            <fieldset class="need-group">
+              <legend>Qual é o problema? <small>(pode escolher vários)</small></legend>
+              <div class="hardware-grid" id="repairIssueChoices"></div>
+            </fieldset>
+            <label class="field">
+              <span>Descreva o problema</span>
+              <textarea id="repairDescription" rows="4" placeholder="Ex.: a janela da sala não fecha bem e entra água quando chove."></textarea>
+            </label>
+            <div class="photo-field">
+              <label class="photo-drop" for="repairPhotos">
+                <strong>Adicionar fotografias</strong>
+                <span>Uma ou mais fotos ajudam o técnico a perceber o problema (até 10, máx. 5 MB cada).</span>
+              </label>
+              <input type="file" id="repairPhotos" accept="image/*" multiple class="sr-only">
+              <div class="photo-list" id="repairPhotoList"></div>
+            </div>
+          </section>
+
+          <section class="control-block joinery-only">
+            <div class="block-head">
+              <p class="block-kicker">Passo 2</p>
+              <h3>Como quer que abra?</h3>
+            </div>
+            <div class="choice-grid opening-grid" id="openingChoices"></div>
+            <select name="openingType" id="openingType" class="sr-only" tabindex="-1" aria-hidden="true"></select>
+
+            <fieldset class="need-group door-only" id="infillGroup">
+              <legend>A porta leva vidro ou é inteiriça?</legend>
+              <div class="choice-grid need-grid" id="infillChoices"></div>
+            </fieldset>
+
+            <fieldset class="need-group hand-group" id="handGroup">
+              <legend>De que lado ficam as dobradiças? <small>(visto de dentro de casa)</small></legend>
+              <div class="choice-grid need-grid" id="handChoices"></div>
+            </fieldset>
+          </section>
+
+          <section class="control-block not-maintenance">
+            <div class="block-head">
+              <p class="block-kicker">Passo 3</p>
+              <h3>Qual o tamanho?</h3>
+            </div>
+            <p class="block-help">Meça a largura e a altura do vão (a abertura na parede). Uma medida aproximada chega para o orçamento.</p>
+            <div class="field-grid field-grid-3">
+              <label class="field">
+                <span>Largura</span>
+                <input type="number" min="200" step="1" name="width" id="width" inputmode="numeric">
+              </label>
+              <label class="field">
+                <span>Altura</span>
+                <input type="number" min="200" step="1" name="height" id="height" inputmode="numeric">
+              </label>
+              <label class="field">
+                <span>Unidade</span>
+                <select name="unit" id="unit">
+                  <option value="mm">milímetros</option>
+                  <option value="cm">centímetros</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="joinery-only">
+              <fieldset class="need-group">
+                <legend>Em quantas partes se divide?</legend>
+                <div class="choice-grid parts-grid" id="partChoices"></div>
+                <select name="moduleCount" id="moduleCount" class="sr-only" tabindex="-1" aria-hidden="true">
+                  <option value="1">1</option>
+                  <option value="2" selected>2</option>
+                  <option value="3">3</option>
+                </select>
+              </fieldset>
+
+              <label class="check-card">
+                <input type="checkbox" name="hasTopLight" id="hasTopLight">
+                <span>Tem uma parte fixa por cima (bandeira)</span>
+              </label>
+
+            </div>
+          </section>
+
+          <section class="control-block joinery-only">
+            <div class="block-head">
+              <p class="block-kicker">Passo 4</p>
+              <h3>Cor e isolamento</h3>
+            </div>
+            <fieldset class="need-group">
+              <legend>Cor dos perfis</legend>
+              <div class="swatch-grid" id="colorChoices"></div>
+            </fieldset>
+            <fieldset class="need-group">
+              <legend>Que tipo de caixilho?</legend>
+              <div class="choice-grid need-grid" id="systemChoices"></div>
+            </fieldset>
+          </section>
+
+          <section class="control-block glass-controls">
+            <div class="block-head">
+              <p class="block-kicker">Passo 2</p>
+              <h3>Como é?</h3>
+            </div>
+            <fieldset class="need-group">
+              <legend>Forma</legend>
+              <div class="choice-grid parts-grid" id="shapeChoices"></div>
+            </fieldset>
+            <fieldset class="need-group glass-only">
+              <legend>Aspeto do vidro</legend>
+              <div class="choice-grid parts-grid" id="finishChoices"></div>
+            </fieldset>
+            <p class="block-help">A espessura e o tipo de vidro adequados são definidos pelo nosso técnico.</p>
+          </section>
+
+          <section class="control-block joinery-only" id="glassBlock">
+            <div class="block-head">
+              <p class="block-kicker">Passo 5</p>
+              <h3>Que conforto procura?</h3>
+            </div>
+            <p class="block-help">Com estas respostas o nosso técnico escolhe o vidro certo para si.</p>
+
+            <fieldset class="need-group">
+              <legend>Esta janela apanha muito sol?</legend>
+              <div class="choice-grid need-grid" id="sunChoices"></div>
+            </fieldset>
+
+            <fieldset class="need-group">
+              <legend>O que é mais importante para si?</legend>
+              <div class="choice-grid need-grid" id="priorityChoices"></div>
+            </fieldset>
+
+            <fieldset class="need-group">
+              <legend>Precisa também de… <small>(opcional)</small></legend>
+              <div class="hardware-grid" id="glassFunctionChoices"></div>
+            </fieldset>
+
+
+            <details class="more-options">
+              <summary>Extras (opcional)</summary>
+              <div class="hardware-grid" id="hardwareGrid"></div>
+            </details>
+          </section>
+
+          <section class="control-block order-block not-maintenance" id="orderBlock">
+            <div class="block-head">
+              <p class="block-kicker">O seu pedido</p>
+              <h3>Precisa de mais janelas ou portas?</h3>
+            </div>
+            <div class="order-list" id="orderList" aria-live="polite"></div>
+            <button type="button" class="add-item-btn" id="addItemButton">+ Adicionar ao pedido e configurar outra</button>
+            <p class="block-help">Pode juntar várias janelas, portas, vidros ou espelhos e pedir tudo de uma vez.</p>
+          </section>
+
+          <section class="control-block">
+            <div class="block-head">
+              <p class="block-kicker">Último passo</p>
+              <h3>Para onde enviamos o orçamento?</h3>
+            </div>
+            <div class="field-grid field-grid-3">
+              <label class="field">
+                <span>Nome</span>
+                <input type="text" name="customerName" id="customerName" autocomplete="name">
+              </label>
+              <label class="field">
+                <span>Telefone</span>
+                <input type="tel" name="customerPhone" id="customerPhone" autocomplete="tel">
+              </label>
+              <label class="field">
+                <span>Email</span>
+                <input type="email" name="customerEmail" id="customerEmail" autocomplete="email">
+              </label>
+            </div>
+            <label class="field maintenance-only">
+              <span>Morada</span>
+              <input type="text" name="address" id="address" autocomplete="street-address" placeholder="Rua, número, localidade">
+            </label>
+            <div class="field-grid field-grid-2 not-maintenance">
+              <label class="field">
+                <span>Onde fica? <small>(opcional)</small></span>
+                <input type="text" name="reference" id="reference" placeholder="Ex.: sala, quarto, cozinha">
+              </label>
+              <label class="field">
+                <span>Quantas iguais a esta?</span>
+                <input type="number" min="1" step="1" name="quantity" id="quantity" value="1" inputmode="numeric">
+              </label>
+            </div>
+            <label class="field not-maintenance">
+              <span>Alguma nota? <small>(opcional)</small></span>
+              <textarea name="notes" id="notes" rows="3" placeholder="Ex.: é para substituir uma janela antiga, prédio com muito ruído, preciso de estores..."></textarea>
+            </label>
+            <div class="validation-message" id="validationMessage" role="status"></div>
+          </section>
+
+          <section class="submit-band">
+            <div>
+              <h3>Pedir proposta</h3>
+              <p class="submit-copy">Sem compromisso, ligamos para confirmar o pedido e entregamos o orçamento ou proposta.</p>
+            </div>
+            <button type="submit" class="primary-btn" id="submitButton">Pedir proposta</button>
+          </section>
+        </form>
+      </section>
+
+      <aside class="summary-panel">
+        <div class="summary-card">
+          <div class="summary-head">
+            <div>
+              <p class="section-kicker" id="previewKicker">A sua escolha</p>
+              <h2 id="previewTitle">Janela</h2>
+            </div>
+          </div>
+
+          <div class="preview-options joinery-only" id="previewOptions">
+            <div class="view-switch" role="group" aria-label="Visualização do produto">
+              <button type="button" class="active" data-preview-mode="2d" aria-pressed="true">2D</button>
+              <button type="button" data-preview-mode="3d" aria-pressed="false">3D</button>
+            </div>
+            <div class="preview-2d-options" id="preview2dOptions">
+              <label><input type="checkbox" name="showDimensions" id="showDimensions" form="configurator-form" checked> Mostrar medidas</label>
+              <label><input type="checkbox" name="showOpeningSymbols" id="showOpeningSymbols" form="configurator-form"> Mostrar como abre</label>
+            </div>
+          </div>
+          <div class="preview-stage" id="previewStage"></div>
+          <p class="preview-hint joinery-only" id="previewHint">INDALSU · DOMO — arraste para ver os perfis em perspetiva.</p>
+
+          <div class="summary-list" id="summaryList"></div>
+
+          <div class="download-row not-maintenance">
+            <button type="button" class="ghost-btn" id="downloadPngButton">Guardar imagem</button>
+          </div>
+        </div>
+
+        <div class="summary-card result-card hidden" id="resultCard" tabindex="-1">
+          <p class="section-kicker" id="resultKicker">Pedido enviado</p>
+          <h2 id="resultTitle">Obrigado!</h2>
+          <p id="resultMessage"></p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script type="importmap">
+    {"imports":{"three":"/vendor/three/build/three.module.js","three/addons/":"/vendor/three/examples/jsm/"}}
+  </script>
+  <script type="module" src="/configurador.js"></script>
+</body>
+</html>

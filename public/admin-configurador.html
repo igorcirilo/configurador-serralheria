@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Configurador V1</title>
+  <style>
+    :root {
+      --bg: #f2eee7;
+      --card: #ffffff;
+      --text: #18202a;
+      --muted: #69727d;
+      --line: rgba(24, 32, 42, 0.12);
+      --accent: #24415a;
+      --accent-soft: rgba(36, 65, 90, 0.08);
+      --shadow: 0 18px 44px rgba(24, 32, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Manrope, Arial, sans-serif; color: var(--text); background: linear-gradient(180deg, #f6f1e9 0%, #f0e8dc 100%); }
+    a { color: inherit; text-decoration: none; }
+
+    .top {
+      padding: 22px 28px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .top h1 { margin: 0; font-size: 2rem; }
+    .top p { margin: 6px 0 0; color: var(--muted); }
+
+    .top-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn, .ghost {
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-weight: 800;
+      border: 1px solid var(--line);
+      background: var(--card);
+      cursor: pointer;
+    }
+    .btn { background: var(--accent); color: #fff; border-color: transparent; }
+
+    .wrap {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 0 28px 32px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .stat, .card {
+      background: var(--card);
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: var(--shadow);
+    }
+
+    .stat { padding: 18px 20px; }
+    .stat strong { display: block; font-size: 2rem; }
+    .stat span { color: var(--muted); font-size: 0.88rem; }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar input {
+      min-width: 260px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font: inherit;
+    }
+
+    .list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .order-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .order-item {
+      display: grid;
+      gap: 12px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .item-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(240px, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .drawing-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .drawing-tabs button {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      font: inherit;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .drawing-tabs button.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .drawing .preview-box img {
+      max-height: 520px;
+      object-fit: contain;
+    }
+
+    .actions {
+      display: grid;
+      gap: 8px;
+    }
+
+    .actions .cad-button,
+    .file-action {
+      display: grid;
+      gap: 2px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      text-align: left;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 0.92rem;
+    }
+
+    .file-action {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+
+    .file-action:hover { border-color: var(--accent); }
+
+    .actions small {
+      font-weight: 500;
+      font-size: 0.78rem;
+      opacity: 0.8;
+    }
+
+    .suggestion {
+      margin: 6px 0 0;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #fff8e6;
+      border: 1px solid #f0d9a0;
+      font-size: 0.85rem;
+      line-height: 1.45;
+    }
+
+    .item-summary summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .item-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 6px 12px;
+    }
+
+    .item-index {
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .item-meta {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 900px) {
+      .item-body { grid-template-columns: 1fr; }
+    }
+
+    .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filters button {
+      border: 1px solid var(--line);
+      background: var(--card);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font: inherit;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+    }
+    .filters button.active { background: var(--accent); color: #fff; border-color: transparent; }
+    .toolbar-right { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: var(--status-bg, var(--accent-soft));
+      color: var(--status-fg, var(--accent));
+    }
+    [data-status="novo"] { --status-bg: #fff1d6; --status-fg: #8a5a00; }
+    [data-status="em_analise"] { --status-bg: #e3edf7; --status-fg: #24415a; }
+    [data-status="orcamento_enviado"] { --status-bg: #ece6fb; --status-fg: #4d3a8f; }
+    [data-status="ganho"] { --status-bg: #dff3e4; --status-fg: #1d6b35; }
+    [data-status="perdido"] { --status-bg: #f1eeea; --status-fg: #69727d; }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: 200px 200px 1fr auto;
+      gap: 10px;
+      align-items: end;
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px dashed var(--line);
+    }
+    .workflow label { display: grid; gap: 6px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; }
+    .workflow select, .workflow input, .workflow textarea {
+      font: inherit;
+      font-size: 0.95rem;
+      text-transform: none;
+      letter-spacing: 0;
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 9px 11px;
+      background: #fff;
+    }
+    .workflow textarea { resize: vertical; min-height: 42px; }
+    .workflow .save-state { font-size: 0.8rem; color: var(--muted); min-height: 1em; text-align: right; }
+    @media (max-width: 900px) { .workflow { grid-template-columns: 1fr; } }
+
+    .meta-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .meta {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: var(--accent-soft);
+    }
+
+    .meta span {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .summary {
+      margin-top: 14px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .summary div {
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.93rem;
+    }
+
+    .preview-box {
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #fff 0%, #f6f1e8 100%);
+      min-height: 250px;
+      overflow: hidden;
+    }
+
+    .preview-box img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .package-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .package-link {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+
+    .empty {
+      padding: 42px 20px;
+      text-align: center;
+      color: var(--muted);
+      background: var(--card);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 1120px) {
+      .card { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .wrap, .top { padding-left: 18px; padding-right: 18px; }
+      .stats, .meta-row { grid-template-columns: 1fr; }
+      .toolbar input { width: 100%; min-width: 0; }
+    }
+    .cad-button {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 0;
+      background: #212830;
+      color: #fff;
+      font: inherit;
+      font-size: 0.86rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .cad-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      background: #1a1f26;
+    }
+
+    .cad-modal[hidden] { display: none; }
+
+    .cad-modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      color: #e6ebf0;
+      font-size: 0.9rem;
+    }
+
+    .cad-modal-head a, .cad-modal-head button {
+      padding: 7px 12px;
+      border-radius: 8px;
+      border: 1px solid #3d4652;
+      background: #2b323b;
+      color: #e6ebf0;
+      font: inherit;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .cad-modal-actions { display: flex; gap: 8px; }
+
+    .cad-modal .cadv { height: 100%; border-radius: 0; }
+  </style>
+  <link rel="stylesheet" href="/cad-viewer/cad-viewer.css">
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>Admin do Configurador</h1>
+      <p>Histórico comercial com preview lateral, resumo técnico e links para o pacote V1.</p>
+    </div>
+    <div class="top-actions">
+      <a class="ghost" href="/">Site</a>
+      <a class="ghost" href="/admin">Todas as leads</a>
+      <a class="ghost" href="/configurador">Configurador</a>
+      <button class="btn" id="refreshBtn">Atualizar</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="stats" id="stats"></section>
+    <div class="toolbar">
+      <div class="filters" id="statusFilters"></div>
+      <div class="toolbar-right">
+        <input id="searchInput" type="search" placeholder="Pesquisar por ID, cliente, telefone, email, produto ou notas">
+        <button class="ghost" type="button" id="exportBtn">Exportar Excel</button>
+      </div>
+    </div>
+    <section class="list" id="ordersList"></section>
+  </main>
+
+  <div class="cad-modal" id="cadModal" hidden role="dialog" aria-modal="true" aria-labelledby="cadModalTitle">
+    <div class="cad-modal-head">
+      <strong id="cadModalTitle">CAD</strong>
+      <div class="cad-modal-actions">
+        <a id="cadModalDxf" href="#" download>Descarregar DXF</a>
+        <button type="button" id="cadModalClose">Fechar (Esc)</button>
+      </div>
+    </div>
+    <div id="cadModalStage"></div>
+  </div>
+
+  <script type="module">
+    import { buildCadSceneForConfig } from '/configurator-core.js';
+    import { CadViewer } from '/cad-viewer/cad-viewer.js';
+
+    const cadModal = document.getElementById('cadModal');
+    const cadStage = document.getElementById('cadModalStage');
+    let cadViewer = null;
+
+    function openCad(order, item) {
+      const cfg = item?.normalizedConfig;
+      const scene = cfg ? buildCadSceneForConfig(cfg) : null;
+      if (!scene) { alert('Este pedido não tem geometria de caixilharia para abrir em CAD.'); return; }
+      const itemLabel = orderItems(order).length > 1 ? ` · item ${item.index}` : '';
+      document.getElementById('cadModalTitle').textContent = `${order.id}${itemLabel} · ${order.nome || 'Pedido'} · ${item.summary?.title || ''}`;
+      const dxf = item.package?.files?.dxf;
+      const dxfLink = document.getElementById('cadModalDxf');
+      dxfLink.hidden = !dxf;
+      if (dxf) dxfLink.href = dxf;
+      cadModal.hidden = false;
+      document.documentElement.style.overflow = 'hidden';
+      if (!cadViewer) cadViewer = new CadViewer(cadStage, { onExportDxf: () => dxf && window.open(dxf, '_blank') });
+      requestAnimationFrame(() => { cadViewer.resize(); cadViewer.setScene(scene); cadViewer.zoomExtents(); cadViewer.viewport.focus(); });
+    }
+
+    function closeCad() {
+      cadModal.hidden = true;
+      document.documentElement.style.overflow = '';
+    }
+
+    document.getElementById('cadModalClose').addEventListener('click', closeCad);
+    document.addEventListener('keydown', (event) => {
+      // O viewport consome o Esc (cancelar comando/seleção); fora dele, Esc fecha o painel.
+      if (event.key === 'Escape' && !cadModal.hidden && !event.defaultPrevented) closeCad();
+    });
+
+    const stats = document.getElementById('stats');
+    const ordersList = document.getElementById('ordersList');
+    const searchInput = document.getElementById('searchInput');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const statusFilters = document.getElementById('statusFilters');
+    let orders = [];
+    let statusFilter = 'todos';
+
+    // Fluxo do orçamentista: cada pedido avança de Novo até Ganho ou Perdido.
+    const STATUSES = [
+      { value: 'novo', label: 'Novo' },
+      { value: 'em_analise', label: 'Em análise' },
+      { value: 'orcamento_enviado', label: 'Orçamento enviado' },
+      { value: 'ganho', label: 'Ganho' },
+      { value: 'perdido', label: 'Perdido' }
+    ];
+    const statusOf = (order) => (STATUSES.some((s) => s.value === order.estado) ? order.estado : 'novo');
+    const statusLabel = (value) => STATUSES.find((s) => s.value === value)?.label || 'Novo';
+
+    function formatDate(value) {
+      return new Date(value).toLocaleString('pt-PT');
+    }
+
+    function escapeHtml(value = '') {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function getFilteredOrders() {
+      const query = searchInput.value.trim().toLowerCase();
+      return orders.filter((order) => {
+        if (statusFilter !== 'todos' && statusOf(order) !== statusFilter) return false;
+        if (!query) return true;
+        const cfg = order.configurador?.normalizedConfig || {};
+        return [
+          order.id,
+          order.nome,
+          order.telefone,
+          order.email,
+          order.responsavel,
+          order.notasInternas,
+          cfg.productType,
+          cfg.category,
+          ...orderItems(order).map((item) => item.summary?.title || '')
+        ].join(' ').toLowerCase().includes(query);
+      });
+    }
+
+    function renderStats() {
+      const count = (value) => orders.filter((order) => statusOf(order) === value).length;
+      stats.innerHTML = `
+        <article class="stat"><strong>${count('novo')}</strong><span>Por tratar (novos)</span></article>
+        <article class="stat"><strong>${count('em_analise')}</strong><span>Em análise</span></article>
+        <article class="stat"><strong>${count('orcamento_enviado')}</strong><span>Orçamentos enviados</span></article>
+        <article class="stat"><strong>${count('ganho')}</strong><span>Ganhos · ${orders.length} pedidos no total</span></article>
+      `;
+    }
+
+    function renderFilters() {
+      const options = [{ value: 'todos', label: 'Todos', total: orders.length },
+        ...STATUSES.map((s) => ({ ...s, total: orders.filter((order) => statusOf(order) === s.value).length }))];
+      statusFilters.innerHTML = options.map((option) => `
+        <button type="button" data-filter="${option.value}" class="${option.value === statusFilter ? 'active' : ''}">${escapeHtml(option.label)} (${option.total})</button>`).join('');
+      statusFilters.querySelectorAll('[data-filter]').forEach((button) => button.addEventListener('click', () => {
+        statusFilter = button.dataset.filter;
+        renderFilters();
+        renderOrders();
+      }));
+    }
+
+    async function saveWorkflow(order, card, changes) {
+      const state = card.querySelector('.save-state');
+      state.textContent = 'A guardar…';
+      const response = await fetch(`/api/leads/${encodeURIComponent(order.id)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...changes, atualizadoEm: new Date().toISOString() })
+      }).catch(() => null);
+      if (!response?.ok) {
+        state.textContent = 'Não foi possível guardar. Tente outra vez.';
+        return;
+      }
+      Object.assign(order, (await response.json()).lead);
+      state.textContent = `Guardado às ${new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })}`;
+      card.querySelector('.status-badge').dataset.status = statusOf(order);
+      card.querySelector('.status-badge').textContent = statusLabel(statusOf(order));
+      renderStats();
+      renderFilters();
+    }
+
+    /** Excel em português usa ";" como separador; o BOM garante os acentos ao abrir o ficheiro. */
+    function exportCsv() {
+      const columns = [
+        ['Pedido', (o) => o.id],
+        ['Data', (o) => formatDate(o.criadoEm)],
+        ['Estado', (o) => statusLabel(statusOf(o))],
+        ['Responsável', (o) => o.responsavel || ''],
+        ['Cliente', (o) => o.nome || ''],
+        ['Telefone', (o) => o.telefone || ''],
+        ['Email', (o) => o.email || ''],
+        ['Produto', (o) => orderItems(o).map((item) => item.summary?.title || '').join(' | ')],
+        ['Medidas (mm)', (o) => orderItems(o).map((item) => item.normalizedConfig?.width ? `${item.normalizedConfig.width}x${item.normalizedConfig.height}` : '').join(' | ')],
+        ['Unidades', (o) => orderItems(o).reduce((sum, item) => sum + Number(item.normalizedConfig?.geometryConfig?.quantity ?? 1), 0)],
+        ['Observações do cliente', (o) => o.observacoes || ''],
+        ['Notas internas', (o) => o.notasInternas || '']
+      ];
+      const cell = (value) => `"${String(value ?? '').replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`;
+      const rows = [columns.map(([title]) => cell(title)).join(';'),
+        ...getFilteredOrders().map((order) => columns.map(([, get]) => cell(get(order))).join(';'))];
+      const blob = new Blob(['﻿' + rows.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `pedidos-configurador-${new Date().toISOString().slice(0, 10)}.csv`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    /** Itens de um pedido: pedidos novos têm `items`; os antigos têm um único item na raiz. */
+    function orderItems(order) {
+      const cfgr = order.configurador || {};
+      if (Array.isArray(cfgr.items) && cfgr.items.length) return cfgr.items;
+      return [{ index: 1, normalizedConfig: cfgr.normalizedConfig || {}, summary: cfgr.summary || {}, package: cfgr.package || {} }];
+    }
+
+    const FILE_ACTIONS = [
+      { key: 'dxf', label: 'Descarregar DXF', hint: 'AutoCAD, BricsCAD, LibreCAD', download: 'technical.dxf' },
+      { key: 'pdf', label: 'Ficha técnica (PDF)', hint: 'Resumo e alçado', download: 'ficha-tecnica.pdf' },
+      { key: 'technicalSvg', label: 'Desenho técnico (SVG)', hint: 'Alçado com cotas', download: 'tecnico.svg' },
+      { key: 'svg', label: 'Imagem comercial (SVG)', hint: 'O que o cliente viu', download: 'comercial.svg' },
+      { key: 'dwg', label: 'DWG simplificado', hint: 'Compatibilidade', download: 'technical.dwg' },
+      { key: 'json', label: 'Dados (JSON)', hint: 'Configuração completa', download: 'config.json' }
+    ];
+
+    function renderItem(order, item, total) {
+      const cfg = item.normalizedConfig || {};
+      const files = item.package?.files || {};
+      const lines = item.summary?.lines || [];
+      const quantity = cfg.geometryConfig?.quantity ?? 1;
+      const prefix = `${order.id}${total > 1 ? `-item${item.index}` : ''}`;
+      const suggestion = lines.find((line) => line.startsWith('Vidro sugerido'));
+      return `
+        <section class="order-item">
+          <div class="item-head">
+            ${total > 1 ? `<span class="item-index">Item ${item.index} de ${total}</span>` : ''}
+            <strong>${escapeHtml(item.summary?.title || 'Sem resumo')}</strong>
+            <span class="item-meta">${escapeHtml(cfg.width ? `${cfg.width} × ${cfg.height} mm` : 'n/d')} · Qtd ${escapeHtml(quantity)}</span>
+          </div>
+          <div class="item-body">
+            <div class="drawing">
+              <div class="drawing-tabs" role="tablist">
+                <button type="button" class="active" data-view="svg">Comercial</button>
+                ${files.technicalSvg ? '<button type="button" data-view="technicalSvg">Técnico</button>' : ''}
+              </div>
+              <div class="preview-box">
+                ${files.svg ? `<img src="${files.svg}" data-svg="${files.svg}" data-technical="${files.technicalSvg || ''}" alt="Desenho do item ${item.index}">` : '<div class="empty">Sem desenho</div>'}
+              </div>
+            </div>
+            <div class="actions">
+              ${cfg.category === 'joinery' ? `<button type="button" class="cad-button" data-cad="${escapeHtml(order.id)}" data-item="${item.index}">Abrir desenho CAD<small>Zoom, medir, layers</small></button>` : ''}
+              ${FILE_ACTIONS.filter((action) => files[action.key]).map((action) => `
+                <a class="file-action" href="${files[action.key]}" ${action.key === 'pdf' || action.key.endsWith('vg') ? 'target="_blank" rel="noopener"' : ''} download="${escapeHtml(`${prefix}-${action.download}`)}">
+                  ${escapeHtml(action.label)}<small>${escapeHtml(action.hint)}</small>
+                </a>`).join('')}
+              ${suggestion ? `<p class="suggestion">${escapeHtml(suggestion)}</p>` : ''}
+            </div>
+          </div>
+          <details class="item-summary">
+            <summary>Resumo técnico completo</summary>
+            <div class="summary">${lines.map((line) => `<div>${escapeHtml(line)}</div>`).join('')}</div>
+          </details>
+        </section>`;
+    }
+
+    function renderOrders() {
+      const filtered = getFilteredOrders();
+      if (!filtered.length) {
+        ordersList.innerHTML = '<div class="empty">Sem pedidos configurador com o filtro atual.</div>';
+        return;
+      }
+
+      ordersList.innerHTML = filtered.map((order) => {
+        const items = orderItems(order);
+        const units = items.reduce((sum, item) => sum + Number(item.normalizedConfig?.geometryConfig?.quantity ?? 1), 0);
+        return `
+          <article class="card" id="${escapeHtml(order.id)}">
+            <div class="order-head">
+              <div>
+                <div style="font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:800">${escapeHtml(order.id)} <span class="status-badge" data-status="${statusOf(order)}">${statusLabel(statusOf(order))}</span></div>
+                <h2 style="margin:.25rem 0 0">${escapeHtml(order.nome || 'Pedido sem nome')}</h2>
+                <p style="margin:.55rem 0 0;color:var(--muted)">${items.length > 1 ? `${items.length} itens · ${units} unidades` : escapeHtml(items[0].summary?.title || 'Sem resumo')}</p>
+              </div>
+              <div style="font-size:.88rem;color:var(--muted);font-weight:700">${escapeHtml(formatDate(order.criadoEm))}</div>
+            </div>
+
+            <div class="meta-row">
+              <div class="meta"><span>Cliente</span><strong>${escapeHtml(order.nome || 'n/d')}</strong></div>
+              <div class="meta"><span>Telefone</span><strong>${escapeHtml(order.telefone || 'n/d')}</strong></div>
+              <div class="meta"><span>Email</span><strong>${escapeHtml(order.email || 'n/d')}</strong></div>
+            </div>
+
+            <div class="workflow" data-workflow="${escapeHtml(order.id)}">
+              <label>Estado
+                <select data-field="estado">
+                  ${STATUSES.map((s) => `<option value="${s.value}" ${s.value === statusOf(order) ? 'selected' : ''}>${s.label}</option>`).join('')}
+                </select>
+              </label>
+              <label>Responsável
+                <input data-field="responsavel" type="text" placeholder="Quem trata" value="${escapeHtml(order.responsavel || '')}">
+              </label>
+              <label>Notas internas (o cliente não vê)
+                <textarea data-field="notasInternas" rows="1" placeholder="Ex.: ligar à tarde, medir no local, pediu laminado">${escapeHtml(order.notasInternas || '')}</textarea>
+              </label>
+              <div class="save-state">${order.atualizadoEm ? `Atualizado ${escapeHtml(formatDate(order.atualizadoEm))}` : ''}</div>
+            </div>
+
+            ${items.map((item) => renderItem(order, item, items.length)).join('')}
+          </article>
+        `;
+      }).join('');
+      ordersList.querySelectorAll('.drawing-tabs button').forEach((button) => button.addEventListener('click', () => {
+        const drawing = button.closest('.drawing');
+        const img = drawing.querySelector('img');
+        drawing.querySelectorAll('.drawing-tabs button').forEach((tab) => tab.classList.toggle('active', tab === button));
+        if (img) img.src = button.dataset.view === 'technicalSvg' ? img.dataset.technical : img.dataset.svg;
+      }));
+      ordersList.querySelectorAll('[data-cad]').forEach((button) => button.addEventListener('click', () => {
+        const order = orders.find((entry) => entry.id === button.dataset.cad);
+        openCad(order, orderItems(order).find((item) => String(item.index) === button.dataset.item));
+      }));
+      // O estado guarda ao escolher; responsável e notas guardam ao sair do campo.
+      ordersList.querySelectorAll('[data-workflow]').forEach((box) => {
+        const order = orders.find((entry) => entry.id === box.dataset.workflow);
+        const card = box.closest('.card');
+        box.querySelectorAll('[data-field]').forEach((field) => field.addEventListener('change', () => {
+          saveWorkflow(order, card, { [field.dataset.field]: field.value.trim() });
+        }));
+      });
+    }
+
+    async function loadOrders() {
+      const response = await fetch('/api/leads');
+      const data = await response.json();
+      const leads = data.leads || [];
+      orders = leads.filter((lead) => lead.origem === 'configurador' || lead.tipo === 'configurador');
+      renderStats();
+      renderFilters();
+      renderOrders();
+      if (location.hash) document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView({ block: 'start' });
+    }
+
+    searchInput.addEventListener('input', renderOrders);
+    refreshBtn.addEventListener('click', loadOrders);
+    document.getElementById('exportBtn').addEventListener('click', exportCsv);
+    loadOrders();
+  </script>
+</body>
+</html>
