@@ -1,0 +1,9 @@
+node_modules/
+.env*
+.vercel/
+.tmp-tests/
+uploads/
+leads*.json
+tmp/
+tmp-*
+output/
